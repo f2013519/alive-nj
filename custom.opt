@@ -1,0 +1,15 @@
+Name: TestFloat
+Feature: isPowerOf2(-C2 ^ -C1)
+Feature: -C2 ^ -C1 == (C3-C2) ^ (C3-C1)
+Feature: abs(C1-C2) u> C3
+Assume: C1 != 0 && C2 != 0
+Pre: C1 u> C3 && C2 u> C3 && isPowerOf2(C1 ^ C2)
+  %a1     = add i29 %A, C1
+  %a2     = add %A, C2
+  %cmp1   = icmp ult %a1, C3
+  %cmp2   = icmp ult %a2, C3
+  %r      = or %cmp1, %cmp2
+=>
+  %newand = and %A, ~(C1^C2)
+  %newadd = add %newand, umax(C1, C2)
+  %r      = icmp ult %newadd, C3
